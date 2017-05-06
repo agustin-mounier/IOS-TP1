@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA5C4AF11EBE083A00AE5AF5 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C4AF01EBE083A00AE5AF5 /* Car.swift */; };
 		FA92C8D01EA55F9600F7E49B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA92C8CF1EA55F9600F7E49B /* AppDelegate.swift */; };
 		FA92C8D21EA55F9600F7E49B /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = FA92C8D11EA55F9600F7E49B /* GameScene.sks */; };
 		FA92C8D41EA55F9600F7E49B /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = FA92C8D31EA55F9600F7E49B /* Actions.sks */; };
@@ -15,9 +16,12 @@
 		FA92C8DB1EA55F9600F7E49B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA92C8D91EA55F9600F7E49B /* Main.storyboard */; };
 		FA92C8DD1EA55F9600F7E49B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA92C8DC1EA55F9600F7E49B /* Assets.xcassets */; };
 		FA92C8E01EA55F9600F7E49B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA92C8DE1EA55F9600F7E49B /* LaunchScreen.storyboard */; };
+		FA92C8E81EA55FBE00F7E49B /* Tire.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA92C8E71EA55FBE00F7E49B /* Tire.swift */; };
+		FA92C8EA1EA5AC9000F7E49B /* CGVectorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA92C8E91EA5AC9000F7E49B /* CGVectorExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FA5C4AF01EBE083A00AE5AF5 /* Car.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		FA92C8CC1EA55F9600F7E49B /* IOS - TP1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IOS - TP1.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA92C8CF1EA55F9600F7E49B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA92C8D11EA55F9600F7E49B /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -28,6 +32,8 @@
 		FA92C8DC1EA55F9600F7E49B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA92C8DF1EA55F9600F7E49B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA92C8E11EA55F9600F7E49B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA92C8E71EA55FBE00F7E49B /* Tire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tire.swift; sourceTree = "<group>"; };
+		FA92C8E91EA5AC9000F7E49B /* CGVectorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGVectorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +75,9 @@
 				FA92C8DC1EA55F9600F7E49B /* Assets.xcassets */,
 				FA92C8DE1EA55F9600F7E49B /* LaunchScreen.storyboard */,
 				FA92C8E11EA55F9600F7E49B /* Info.plist */,
+				FA92C8E71EA55FBE00F7E49B /* Tire.swift */,
+				FA92C8E91EA5AC9000F7E49B /* CGVectorExtension.swift */,
+				FA5C4AF01EBE083A00AE5AF5 /* Car.swift */,
 			);
 			path = "IOS - TP1";
 			sourceTree = "<group>";
@@ -148,6 +157,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA92C8D61EA55F9600F7E49B /* GameScene.swift in Sources */,
+				FA92C8EA1EA5AC9000F7E49B /* CGVectorExtension.swift in Sources */,
+				FA5C4AF11EBE083A00AE5AF5 /* Car.swift in Sources */,
+				FA92C8E81EA55FBE00F7E49B /* Tire.swift in Sources */,
 				FA92C8D81EA55F9600F7E49B /* GameViewController.swift in Sources */,
 				FA92C8D01EA55F9600F7E49B /* AppDelegate.swift in Sources */,
 			);
@@ -311,6 +323,7 @@
 				FA92C8E61EA55F9600F7E49B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
