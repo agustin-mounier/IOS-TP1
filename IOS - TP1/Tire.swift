@@ -52,7 +52,7 @@ class Tire: SKSpriteNode {
     
     func applyInertia() {
         if(self.physicsBody?.angularVelocity != nil) {
-            self.physicsBody?.applyAngularImpulse(-0.01 * self.physicsBody!.angularVelocity)
+//            self.physicsBody?.applyAngularImpulse(-0.01 * self.physicsBody!.angularVelocity)
         }
     }
     
@@ -125,7 +125,7 @@ class Tire: SKSpriteNode {
     }
     
     func torqueLeft() {
-        if((physicsBody?.angularVelocity)! > MAX_ANGULAR_VEL || zRotation >= CGFloat.pi/4) {
+        if((physicsBody?.angularVelocity)! > MAX_ANGULAR_VEL) {
             return
         }
         physicsBody?.applyTorque(1.1)
@@ -141,7 +141,7 @@ class Tire: SKSpriteNode {
     }
     
     func torqueRight() {
-        if((physicsBody?.angularVelocity)! > MAX_ANGULAR_VEL || zRotation <= -CGFloat.pi/4) {
+        if((physicsBody?.angularVelocity)! > MAX_ANGULAR_VEL) {
             return
         }
         physicsBody?.applyTorque(-1.1)

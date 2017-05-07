@@ -11,19 +11,15 @@ import SpriteKit
 
 class Car: SKSpriteNode {
     
-    var frontRightTire: Tire
-    var frontLeftTire: Tire
-    var backRightTire: Tire
-    var backLeftTire: Tire
+    var frontRightTire: Tire!
+    var frontLeftTire: Tire!
+    var backRightTire: Tire!
+    var backLeftTire: Tire!
     
     init() {
-        frontRightTire = Tire()
-        frontLeftTire = Tire()
-        backRightTire = Tire()
-        backLeftTire = Tire()
         let texture = SKTexture(imageNamed: "car")
         super.init(texture: texture, color: UIColor.clear, size: CGSize(width: 50, height: 100))
-        self.position = CGPoint(x: 200, y:200)
+        self.position = CGPoint(x: 100, y:200)
         self.physicsBody = SKPhysicsBody(rectangleOf: size)
         self.physicsBody?.isDynamic = true
         self.physicsBody?.categoryBitMask = PhysicsCategory.Car
@@ -119,6 +115,10 @@ class Car: SKSpriteNode {
     func updateMovement() {
         frontRightTire.updateMovement()
         frontLeftTire.updateMovement()
+    }
+    
+    func limitWheelsTurn() {
+    
     }
     
     

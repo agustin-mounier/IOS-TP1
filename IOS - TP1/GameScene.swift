@@ -51,33 +51,36 @@ struct PhysicsCategory {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    
+    var cam:SKCameraNode!
     let car = Car()
 
-    let arrowUp = SKSpriteNode(color: UIColor.white, size: CGSize(width: 25, height: 25))
-    let arrowDown = SKSpriteNode(color: UIColor.white, size: CGSize(width: 25, height: 25))
-    let arrowLeft = SKSpriteNode(color: UIColor.white, size: CGSize(width: 25, height: 25))
-    let arrowRight = SKSpriteNode(color: UIColor.white, size: CGSize(width: 25, height: 25))
-
+    let camScale = CGFloat(2.0)
+    var arrowDown: SKSpriteNode!
+    var arrowLeft: SKSpriteNode!
+    var arrowRight: SKSpriteNode!
+    
     override func didMove(to view: SKView) {
         view.showsPhysics = true
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
-        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
-        physicsBody?.categoryBitMask = PhysicsCategory.Edge
-
         
-        arrowUp.position = CGPoint(x:size.width * 0.5, y: size.width * 0.15)
-        arrowDown.position = CGPoint(x:size.width * 0.5, y: size.width * 0.1)
-        arrowLeft.position = CGPoint(x:size.width * 0.25, y: size.width * 0.1)
-        arrowRight.position = CGPoint(x:size.width * 0.75, y: size.width * 0.1)
+        arrowDown = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * camScale, height: size.height * 0.10 * camScale))
+        arrowLeft = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
+        arrowRight = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
         
         addCar()
         
-        addChild(arrowUp)
         addChild(arrowDown)
         addChild(arrowLeft)
         addChild(arrowRight)
+        
+        cam = SKCameraNode()
+        self.camera = cam
+        self.addChild(cam)
+        cam.position = car.position
+        cam.xScale = camScale
+        cam.yScale = camScale
+        car.beginMoveForward()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -87,11 +90,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         let touchLocation = touch.location(in: self)
-        
-        if(arrowUp.contains(touchLocation)) {
-            car.endMoveForward()
-        }
-        
+
         if(arrowLeft.contains(touchLocation)) {
             car.endLeftTurn()
         }
@@ -113,10 +112,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let touchLocationBegan = touch.location(in: self)
         
-        if(arrowUp.contains(touchLocationBegan)) {
-            car.beginMoveForward()
-        }
-        
         if(arrowLeft.contains(touchLocationBegan)) {
             car.beginLeftTurn()
         }
@@ -135,8 +130,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         
         car.applyFriction()
-        car.applyTurningFriction()
+//        car.applyTurningFriction()
         car.updateMovement()
+        cam.position = car.position
+        updateControllsPositions()
     }
     
     
@@ -156,17 +153,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let pinJointRightTire = SKPhysicsJointPin.joint(withBodyA: car.physicsBody!,
                                                         bodyB: frontRightTire.physicsBody!,
                                                         anchor: pinPositionRightTire)
+        pinJointRightTire.shouldEnableLimits = true
+        pinJointRightTire.upperAngleLimit = CGFloat.pi / 4.0
+        pinJointRightTire.lowerAngleLimit = CGFloat.pi / -4.0
+        pinJointRightTire.frictionTorque = 0.9
+
+        
         
         let pinPositionLeftTire =
             CGPoint(x:car.position.x - car.size.width/2 + frontRightTire.size.width/2,
                     y:car.position.y + car.size.height/2 - frontRightTire.size.height/2)
     
         frontLeftTire.position = pinPositionLeftTire
+        
 
         let pinJointLeftTire = SKPhysicsJointPin.joint(withBodyA: car.physicsBody!,
                                                        bodyB: frontLeftTire.physicsBody!,
                                                        anchor: pinPositionLeftTire)
-        
+        pinJointLeftTire.shouldEnableLimits = true
+        pinJointLeftTire.upperAngleLimit = CGFloat.pi / 4.0
+        pinJointLeftTire.lowerAngleLimit = CGFloat.pi / -4.0
+        pinJointLeftTire.frictionTorque = 0.9
+
         
         
         let fixedPositionRightTire =
@@ -212,6 +220,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        physicsWorld.add(fixedJointLeftTire)
         car.setTires(frontRight: frontRightTire, frontLeft: frontLeftTire, backRight: backRightTire, backLeft: backLeftTire)
     
+    }
+    
+    func updateControllsPositions() {
+    
+        arrowDown.position = CGPoint(x:cam.position.x, y: cam.position.y - size.height/2 * camScale + arrowDown.size.height/2)
+        arrowLeft.position = CGPoint(x:cam.position.x - size.width * 0.5 * camScale + arrowLeft.size.width/2, y: cam.position.y)
+        arrowRight.position = CGPoint(x:cam.position.x + size.width * 0.5 * camScale - arrowRight.size.width/2 , y: cam.position.y)
+        
+
     }
 
     
