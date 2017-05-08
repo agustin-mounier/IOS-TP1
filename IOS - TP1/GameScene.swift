@@ -51,23 +51,37 @@ struct PhysicsCategory {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    var cam:SKCameraNode!
     let car = Car()
-
     let camScale = CGFloat(2.0)
+    let LAPS = 3
+    let timerLabel = SKLabelNode(fontNamed: "Arial")
+    let lapsLabel = SKLabelNode(fontNamed: "Arial")
+    let bestLapLabel = SKLabelNode(fontNamed: "Arial")
+
+    
+    var cam:SKCameraNode!
+    
     var arrowDown: SKSpriteNode!
     var arrowLeft: SKSpriteNode!
     var arrowRight: SKSpriteNode!
+    
+    var speedBoosts = [SKNode]()
+    var speedBumps = [SKNode]()
+
+    var finishLine: SKNode!
+    var gameTimer: Timer!
+    var laps = 0
+    var time = 0
+    var bestTime = 0
+    var countLap = true
+    
     
     override func didMove(to view: SKView) {
         view.showsPhysics = true
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
         
-        arrowDown = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * camScale, height: size.height * 0.10 * camScale))
-        arrowLeft = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
-        arrowRight = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
-        
+        setUpControlls()
         addCar()
         
         addChild(arrowDown)
@@ -81,6 +95,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         cam.xScale = camScale
         cam.yScale = camScale
         car.beginMoveForward()
+        
+        getSpeedBoostsAndBumps()
+        
+        gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        
+        setUpLabels()
+        addChild(timerLabel)
+        addChild(lapsLabel)
+        addChild(bestLapLabel)
+        
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -130,10 +154,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         
         car.applyFriction()
-//        car.applyTurningFriction()
         car.updateMovement()
         cam.position = car.position
         updateControllsPositions()
+        applySpeedBoosts()
+        updateLabelsPosition()
+        updateLapsCounter()
+        applySpeedBumps()
     }
     
     
@@ -228,8 +255,86 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         arrowLeft.position = CGPoint(x:cam.position.x - size.width * 0.5 * camScale + arrowLeft.size.width/2, y: cam.position.y)
         arrowRight.position = CGPoint(x:cam.position.x + size.width * 0.5 * camScale - arrowRight.size.width/2 , y: cam.position.y)
         
+    }
+    
+    func applySpeedBoosts() {
+        for speedBoost in speedBoosts {
+            if(speedBoost.contains(car.position)) {
+                car.applySpeedBoost()
+            }
+        }
+    }
+    
+    func applySpeedBumps() {
+        for speedBump in speedBumps {
+            if(speedBump.contains(car.position)) {
+                car.applySpeedBump()
+            }
+        }
+    }
+    
+    func runTimedCode() {
+        time += 1
+        timerLabel.text = "Time: \(time)"
+    }
+    
+    func updateLabelsPosition() {
+        timerLabel.position.x = cam.position.x + size.width * 0.5 * camScale - 90
+        timerLabel.position.y = cam.position.y + size.height * 0.5 * camScale - 60
+        
+        lapsLabel.position.x = cam.position.x + size.width * 0.5 * camScale - 250
+        lapsLabel.position.y = cam.position.y + size.height * 0.5 * camScale - 60
+        
+        bestLapLabel.position.x = cam.position.x + size.width * 0.5 * camScale - 450
+        bestLapLabel.position.y = cam.position.y + size.height * 0.5 * camScale - 60
 
     }
 
+    func updateLapsCounter() {
+        if(finishLine.contains(car.position) && countLap) {
+            laps += 1
+            lapsLabel.text = "Lap: \(laps)"
+            countLap = false
+            if(bestTime == 0 || bestTime > time - bestTime) {
+                bestLapLabel.text = "Best time: \(time - bestTime)"
+                bestTime = time - bestTime
+            }
+        }
+        if(car.position.y > finishLine.position.y - 100 &&
+            car.position.y < finishLine.position.y) {
+            countLap = true
+        }
+    }
+    
+    func setUpLabels() {
+        timerLabel.fontSize = 30
+        timerLabel.color = UIColor.white
+        lapsLabel.fontSize = 30
+        lapsLabel.color = UIColor.white
+        lapsLabel.text = "Lap: 0"
+        bestLapLabel.fontSize = 30
+        bestLapLabel.color = UIColor.white
+        bestLapLabel.text = "Best time: none"
+    }
+    
+    func setUpControlls() {
+        arrowDown = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * camScale, height: size.height * 0.10 * camScale))
+        arrowLeft = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
+        arrowRight = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
+    }
+    
+    func getSpeedBoostsAndBumps() {
+        finishLine = (scene?.childNode(withName:"finish-line"))!
+        speedBoosts.append((scene?.childNode(withName:"speed-boost-1"))!)
+        speedBoosts.append((scene?.childNode(withName:"speed-boost-2"))!)
+        speedBoosts.append((scene?.childNode(withName:"speed-boost-3"))!)
+        speedBoosts.append((scene?.childNode(withName:"speed-boost-4"))!)
+        
+        speedBumps.append((scene?.childNode(withName:"speed-bump-1"))!)
+        speedBumps.append((scene?.childNode(withName:"speed-bump-2"))!)
+        speedBumps.append((scene?.childNode(withName:"speed-bump-3"))!)
+        speedBumps.append((scene?.childNode(withName:"speed-bump-4"))!)
+        speedBumps.append((scene?.childNode(withName:"speed-bump-5"))!)
+    }
     
 }

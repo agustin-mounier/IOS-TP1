@@ -56,6 +56,7 @@ class Car: SKSpriteNode {
     func endLeftTurn() {
         frontRightTire.endTorqueLeft()
         frontLeftTire.endTorqueLeft()
+        resetTiresDirection()
     }
     
     func beginRightTurn() {
@@ -66,6 +67,7 @@ class Car: SKSpriteNode {
     func endRightTurn() {
         frontRightTire.endTorqueRight()
         frontLeftTire.endTorqueRight()
+        resetTiresDirection()
     }
     
     func beginMoveBackwards() {
@@ -117,8 +119,19 @@ class Car: SKSpriteNode {
         frontLeftTire.updateMovement()
     }
     
-    func limitWheelsTurn() {
+    func applySpeedBoost() {
+        frontLeftTire.speedBoost()
+        frontRightTire.speedBoost()
+    }
     
+    func applySpeedBump() {
+        frontLeftTire.impulseDown()
+        frontRightTire.impulseDown()
+    }
+    
+    func resetTiresDirection() {
+        frontRightTire.zRotation = zRotation
+        frontLeftTire.zRotation = zRotation
     }
     
     

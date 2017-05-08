@@ -11,8 +11,9 @@ import SpriteKit
 
 class Tire: SKSpriteNode {
     
-    let MAX_FORWARD_VEL = CGFloat(70.0)
+    let MAX_FORWARD_VEL = CGFloat(270.0)
     let MAX_ANGULAR_VEL = CGFloat(60.0)
+    let IMPULSE_FORCE = CGFloat(1000.0)
     
     var MOVING_UP = false
     var TORQUE_LEFT = false
@@ -93,7 +94,7 @@ class Tire: SKSpriteNode {
         }
         let nForward = CGVector(angle: zRotation + CGFloat.pi/2)
         
-        physicsBody?.applyForce(nForward * 300)
+        physicsBody?.applyForce(nForward * IMPULSE_FORCE)
     }
     
     func beginImpulseDown() {
@@ -111,7 +112,7 @@ class Tire: SKSpriteNode {
         }
         let nForward = CGVector(angle: zRotation + CGFloat.pi/2)
         
-        physicsBody?.applyForce(nForward * -300)
+        physicsBody?.applyForce(nForward * (IMPULSE_FORCE * -1))
     }
     
     
@@ -164,6 +165,12 @@ class Tire: SKSpriteNode {
         if(MOVING_DOWN) {
             impulseDown()
         }
+    }
+    
+    func speedBoost() {
+        let nForward = CGVector(angle: zRotation + CGFloat.pi/2)
+        
+        physicsBody?.applyForce(nForward * IMPULSE_FORCE * 10)
     }
     
     
