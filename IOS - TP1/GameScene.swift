@@ -9,38 +9,6 @@
 import SpriteKit
 import GameplayKit
 
-func + (left: CGPoint, right: CGPoint) -> CGPoint {
-    return CGPoint(x: left.x + right.x, y: left.y + right.y)
-}
-
-func - (left: CGPoint, right: CGPoint) -> CGPoint {
-    return CGPoint(x: left.x - right.x, y: left.y - right.y)
-}
-
-func * (point: CGPoint, scalar: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x * scalar, y: point.y * scalar)
-}
-
-func / (point: CGPoint, scalar: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x / scalar, y: point.y / scalar)
-}
-
-#if !(arch(x86_64) || arch(arm64))
-    func sqrt(a: CGFloat) -> CGFloat {
-        return CGFloat(sqrtf(Float(a)))
-    }
-#endif
-
-extension CGPoint {
-    func length() -> CGFloat {
-        return sqrt(x*x + y*y)
-    }
-    
-    func normalized() -> CGPoint {
-        return self / length()
-    }
-}
-
 struct PhysicsCategory {
     static let None      : UInt32 = 0
     static let All       : UInt32 = UInt32.max
@@ -77,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func didMove(to view: SKView) {
-        view.showsPhysics = true
+//        view.showsPhysics = true
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
         
@@ -204,36 +172,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         
         
-        let fixedPositionRightTire =
+        let springPositionRightTire =
             CGPoint(x:car.position.x + car.size.width/2 - frontRightTire.size.width/2,
                     y:car.position.y - car.size.height/2 + frontRightTire.size.height/2)
         
-        backRightTire.position = fixedPositionRightTire
+        backRightTire.position = springPositionRightTire
         
-        let fixedJointRightTire = SKPhysicsJointFixed.joint(withBodyA: car.physicsBody!,
+        let springJointRightTire = SKPhysicsJointSpring.joint(withBodyA: car.physicsBody!,
                                                             bodyB: backRightTire.physicsBody!,
-                                                            anchor: fixedPositionRightTire)
+                                                            anchorA: springPositionRightTire,
+                                                            anchorB: springPositionRightTire)
         
-        let fixedPositionLeftTire =
+        let springPositionLeftTire =
             CGPoint(x:car.position.x - car.size.width/2 + frontRightTire.size.width/2,
                     y:car.position.y - car.size.height/2 + frontRightTire.size.height/2)
         
-        backLeftTire.position = fixedPositionLeftTire
+        backLeftTire.position = springPositionLeftTire
         
-        let fixedJointLeftTire = SKPhysicsJointFixed.joint(withBodyA: car.physicsBody!,
+        let springJointLeftTire = SKPhysicsJointSpring.joint(withBodyA: car.physicsBody!,
                                                            bodyB: backLeftTire.physicsBody!,
-                                                           anchor: fixedPositionLeftTire)
+                                                           anchorA: springPositionLeftTire,
+                                                           anchorB: springPositionLeftTire)
         
+        springJointLeftTire.frequency = 20
+        springJointRightTire.frequency = 20
         
-        let fixedPositionLeftTireMiddle =
-            CGPoint(x:car.position.x,
-                    y:car.position.y - car.size.height/2 + frontRightTire.size.height/2)
-        
-        backLeftTire.position = fixedPositionLeftTireMiddle
-        
-        let fixedJointLeftTirem = SKPhysicsJointFixed.joint(withBodyA: car.physicsBody!,
-                                                           bodyB: backLeftTire.physicsBody!,
-                                                           anchor: fixedPositionLeftTireMiddle)
         
         addChild(backLeftTire)
         addChild(frontLeftTire)
@@ -242,9 +205,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(car)
         physicsWorld.add(pinJointRightTire)
         physicsWorld.add(pinJointLeftTire)
-        physicsWorld.add(fixedJointLeftTirem)
-//        physicsWorld.add(fixedJointRightTire)
-//        physicsWorld.add(fixedJointLeftTire)
+        physicsWorld.add(springJointRightTire)
+        physicsWorld.add(springJointLeftTire)
         car.setTires(frontRight: frontRightTire, frontLeft: frontLeftTire, backRight: backRightTire, backLeft: backLeftTire)
     
     }
@@ -300,8 +262,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 bestTime = time - bestTime
             }
         }
-        if(car.position.y > finishLine.position.y - 100 &&
-            car.position.y < finishLine.position.y) {
+        if(car.position.y > finishLine.position.y - 400 &&
+            car.position.y < finishLine.position.y - 200) {
             countLap = true
         }
     }

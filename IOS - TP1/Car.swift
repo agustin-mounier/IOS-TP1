@@ -20,6 +20,7 @@ class Car: SKSpriteNode {
         let texture = SKTexture(imageNamed: "car")
         super.init(texture: texture, color: UIColor.clear, size: CGSize(width: 50, height: 100))
         self.position = CGPoint(x: 100, y:200)
+        self.zPosition = CGFloat(1000.0)
         self.physicsBody = SKPhysicsBody(rectangleOf: size)
         self.physicsBody?.isDynamic = true
         self.physicsBody?.categoryBitMask = PhysicsCategory.Car
@@ -92,9 +93,11 @@ class Car: SKSpriteNode {
         }
         if(backRightTire.isMoving()) {
             backRightTire.applyFriction()
+            backRightTire.zRotation = zRotation
         }
         if(backLeftTire.isMoving()) {
             backLeftTire.applyFriction()
+            backLeftTire.zRotation = zRotation
         }
         
     }

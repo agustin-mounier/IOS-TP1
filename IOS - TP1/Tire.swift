@@ -11,9 +11,9 @@ import SpriteKit
 
 class Tire: SKSpriteNode {
     
-    let MAX_FORWARD_VEL = CGFloat(270.0)
+    let MAX_FORWARD_VEL = CGFloat(370.0)
     let MAX_ANGULAR_VEL = CGFloat(60.0)
-    let IMPULSE_FORCE = CGFloat(1000.0)
+    let IMPULSE_FORCE = CGFloat(2500.0)
     
     var MOVING_UP = false
     var TORQUE_LEFT = false
@@ -47,6 +47,16 @@ class Tire: SKSpriteNode {
         let lateralVelocity = self.getLateralVelocity()
         self.physicsBody?.applyImpulse(lateralVelocity * -1.0)
         
+        let forwardVelocity = getForwardVelocity()
+        physicsBody?.applyImpulse(forwardVelocity * -0.05)
+    }
+    
+    func cancelLateralVelocity() {
+        let lateralVelocity = self.getLateralVelocity()
+        self.physicsBody?.applyImpulse(lateralVelocity * -1.0)
+    }
+    
+    func applyForwadFriction() {
         let forwardVelocity = getForwardVelocity()
         physicsBody?.applyImpulse(forwardVelocity * -0.05)
     }
@@ -170,7 +180,7 @@ class Tire: SKSpriteNode {
     func speedBoost() {
         let nForward = CGVector(angle: zRotation + CGFloat.pi/2)
         
-        physicsBody?.applyForce(nForward * IMPULSE_FORCE * 10)
+        physicsBody?.applyForce(nForward * IMPULSE_FORCE * 7)
     }
     
     
