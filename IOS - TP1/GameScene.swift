@@ -38,14 +38,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var finishLine: SKNode!
     var gameTimer: Timer!
-    var laps = 2
+    var laps = 0
     var time = 0
     var bestTime = 0
     var countLap = true
     
     
     override func didMove(to view: SKView) {
-//        view.showsPhysics = true
+//        view.showPhysics = true
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
         
@@ -183,6 +183,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                                                             anchorA: springPositionRightTire,
                                                             anchorB: springPositionRightTire)
         
+        
         let springPositionLeftTire =
             CGPoint(x:car.position.x - car.size.width/2 + frontRightTire.size.width/2,
                     y:car.position.y - car.size.height/2 + frontRightTire.size.height/2)
@@ -193,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                                                            bodyB: backLeftTire.physicsBody!,
                                                            anchorA: springPositionLeftTire,
                                                            anchorB: springPositionLeftTire)
-        
+
         springJointLeftTire.frequency = 20
         springJointRightTire.frequency = 20
         
@@ -284,9 +285,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setUpControlls() {
-        arrowDown = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * camScale, height: size.height * 0.10 * camScale))
-        arrowLeft = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
-        arrowRight = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
+        arrowDown = SKSpriteNode(color: UIColor.clear, size: CGSize(width: size.width * camScale, height: size.height * 0.10 * camScale))
+        arrowLeft = SKSpriteNode(color: UIColor.clear, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
+        arrowRight = SKSpriteNode(color: UIColor.clear, size: CGSize(width: size.width * 0.15 * camScale, height: size.height * camScale))
     }
     
     func getSpeedBoostsAndBumps() {

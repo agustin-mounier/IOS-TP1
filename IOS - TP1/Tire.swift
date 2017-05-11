@@ -11,7 +11,7 @@ import SpriteKit
 
 class Tire: SKSpriteNode {
     
-    let MAX_FORWARD_VEL = CGFloat(370.0)
+    let MAX_FORWARD_VEL = CGFloat(470.0)
     let MAX_ANGULAR_VEL = CGFloat(60.0)
     let IMPULSE_FORCE = CGFloat(2500.0)
     
