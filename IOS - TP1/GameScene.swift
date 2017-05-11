@@ -15,7 +15,6 @@ struct PhysicsCategory {
     static let Edge      : UInt32 = 0b1
     static let Tire      : UInt32 = 0b10
     static let Car       : UInt32 = 0b11
-    
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -25,6 +24,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let timerLabel = SKLabelNode(fontNamed: "Arial")
     let lapsLabel = SKLabelNode(fontNamed: "Arial")
     let bestLapLabel = SKLabelNode(fontNamed: "Arial")
+    let endGameLabel = SKLabelNode(fontNamed: "Arial-Bold")
 
     
     var cam:SKCameraNode!
@@ -38,7 +38,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var finishLine: SKNode!
     var gameTimer: Timer!
-    var laps = 0
+    var laps = 2
     var time = 0
     var bestTime = 0
     var countLap = true
@@ -249,6 +249,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         bestLapLabel.position.x = cam.position.x + size.width * 0.5 * camScale - 450
         bestLapLabel.position.y = cam.position.y + size.height * 0.5 * camScale - 60
+        
+        endGameLabel.position.x = cam.position.x
+        endGameLabel.position.y = cam.position.y + 100
 
     }
 
@@ -261,21 +264,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 bestLapLabel.text = "Best time: \(time - bestTime)"
                 bestTime = time - bestTime
             }
+            if(laps == LAPS) {
+                showEndGameStats()
+            }
         }
         if(car.position.y > finishLine.position.y - 400 &&
             car.position.y < finishLine.position.y - 200) {
             countLap = true
         }
+    
     }
     
     func setUpLabels() {
         timerLabel.fontSize = 30
-        timerLabel.color = UIColor.white
         lapsLabel.fontSize = 30
-        lapsLabel.color = UIColor.white
         lapsLabel.text = "Lap: 0"
         bestLapLabel.fontSize = 30
-        bestLapLabel.color = UIColor.white
         bestLapLabel.text = "Best time: none"
     }
     
@@ -297,6 +301,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         speedBumps.append((scene?.childNode(withName:"speed-bump-3"))!)
         speedBumps.append((scene?.childNode(withName:"speed-bump-4"))!)
         speedBumps.append((scene?.childNode(withName:"speed-bump-5"))!)
+    }
+    
+    func showEndGameStats() {
+        endGameLabel.fontSize = 60
+        endGameLabel.zPosition = CGFloat(1500)
+        endGameLabel.text = bestLapLabel.text! + " Total time: \(time)"
+        addChild(endGameLabel)
+        car.endMoveForward()
+        gameTimer.invalidate()
     }
     
 }
